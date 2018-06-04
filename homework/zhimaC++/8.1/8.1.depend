@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1519960471 source:c:\users\58258\desktop\code resourse\codeblocks\zhimac++\8.1\main.cpp
+	<iostream>
+	<algorithm>
+	<vector>
+
