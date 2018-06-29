@@ -1,38 +1,31 @@
-#include <bits/stdc++.h>
-#define N 1005
+#include <iostream>
+#include <cstdio>
+#include <cstring>
 using namespace std;
-
-int n,W,v[N],w[N],dp[N][N];
-
-void solve()    {
-    for (int i=0;i<n;i++)   {
-        for (int j=1;j<=W;j++)  {
-            if (j<w[i-1]) dp[i][j]=dp[i-1][j];
-            else dp[i][j]=max(dp[i-1][j],dp[i-1][j-w[i-1]]+v[i-1]);
-        }
-    }
+int dp[15][15],d[15];
+void init() {
+    dp[0][0]=1;
+    for (int i=1;i<=9;i++)
+        for (int j=0;j<=9;j++)
+            for (int k=0;k<=9;k++)
+                if (j!=4&&!(j==6&&k==2))
+                    dp[i][j]+=dp[i-1][k];
 }
-/*
-void solve()    {
-    for (int i=0;i<n;i++)   {
-        for (int j=0;j<=W;j++)  {
-            if (j<w[i]) dp[i+1][j]=dp[i][j];
-            else dp[i+1][j]=max(dp[i][j],dp[i][j-w[i]]+v[i]);
+int solve(int n)    {
+    int ans=0;
+    int len=0;;
+    while (n)   {
+        ++len;
+        d[len]=n%10;
+        n/=10;
+    }
+    d[len+1]=0;
+    for (int i=len;i>=1;i--)    {
+        for (int j=0;j<d[i];j++)    {
+            if (d[i+1]!=6||j!=2)
+                ans+=dp[i][j];
         }
+        if (d[i]==4||(d[i+1]==6&&d[i]==2))  break;
     }
-}
-*/
-int main () {
-    cin>>n;
-    for (int i=0;i<n;i++)   cin>>w[i];
-    for (int i=0;i<n;i++)   cin>>v[i];
-    cin>>W;
-    solve();
-    for (int i=0;i<=n;i++)  {
-        for (int j=0;j<=W;j++)
-            cout<<'\t'<<dp[i][j];
-        cout<<endl;
-    }
-    cout<<dp[n-1][W]<<endl;
-    return 0;
+    return ans;
 }
