@@ -1,22 +1,28 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef pair<int,double> term;
-vector<term> terms[2];
-bool cmp(const term a,const term b)  {
-    return a.first>b.first;
-}
-int main()  {
-    int n,a;
-    double b;
-    cin>>n;
-    for (int i=0;i<n;i++)   {
-        cin>>a;
-        cin>>b;
-        terms[0].push_back(make_pair(a,b));
+struct Node {
+    int x,y;
+    Node(int a=0,int b=0)   {
+        x=a,y=b;
+    };
+};
+struct cmp1 {   ////最重要的排序函数，此处为先按x从小到大排序，如果x相等就按y从大到小排序
+    bool operator ()(Node &c1,Node &c2){
+        if (c1.x==c2.x)  return c1.y<c2.y;
+        else return c1.x>c2.x;
     }
-    sort(terms[0].begin(),terms[0].end(),cmp);
-    for (auto d:terms[0])    {
-        cout<<d.first<<' '<<d.second<<endl;
+};
+int main()  {
+    priority_queue<Node,vector<Node>,cmp1> q;
+    int n,t1,t2;
+    cin>>n;
+    while (n--) {
+        cin>>t1>>t2;
+        q.push(Node(t1,t2));
+    }
+    while (!q.empty())  {
+        Node temp=q.top();q.pop();
+        cout<<temp.x<<'\t'<<temp.y<<endl;
     }
     return 0;
 }
