@@ -1,28 +1,41 @@
 #include <bits/stdc++.h>
+#define MAX_NODE 105
 using namespace std;
-struct Node {
-    int x,y;
-    Node(int a=0,int b=0)   {
-        x=a,y=b;
-    };
-};
-struct cmp1 {   ////最重要的排序函数，此处为先按x从小到大排序，如果x相等就按y从大到小排序
-    bool operator ()(Node &c1,Node &c2){
-        if (c1.x==c2.x)  return c1.y<c2.y;
-        else return c1.x>c2.x;
-    }
-};
+const int INF=10005;
+map<int,vector<int> >   tree;
+int save[MAX_NODE];
+void dfs(int start,int level);
 int main()  {
-    priority_queue<Node,vector<Node>,cmp1> q;
-    int n,t1,t2;
-    cin>>n;
-    while (n--) {
-        cin>>t1>>t2;
-        q.push(Node(t1,t2));
+    int N,M,K,n1,nt,cnt=0;
+    int cle;
+    cin>>N>>M;
+    cle=N-M;
+    for (int i=0;i<M;i++)   {
+        cin>>n1>>K;
+        for (int j=0;j<K;j++)   {
+            cin>>nt;
+            tree[n1].push_back(nt);
+        }
     }
-    while (!q.empty())  {
-        Node temp=q.top();q.pop();
-        cout<<temp.x<<'\t'<<temp.y<<endl;
+    dfs(1,0);
+    cnt=save[0];
+    cout<<save[0];
+    for (int i=1;cnt<cle;i++)    {
+        cnt+=save[i];
+        cout<<' '<<save[i];
     }
+    cout<<endl;
     return 0;
+}
+
+void dfs(int start,int level)  {
+    if (tree[start].empty())    {
+        if (save[level]==INF)   save[level]=1;
+        else save[level]++;
+        return;
+    }
+    vector<int>::iterator ite=tree[start].begin();
+    for (;ite!=tree[start].end();ite++) {
+        dfs(*ite,level+1);
+    }
 }
