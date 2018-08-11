@@ -1,41 +1,19 @@
 #include <bits/stdc++.h>
-#define MAX_NODE 105
 using namespace std;
-const int INF=10005;
-map<int,vector<int> >   tree;
-int save[MAX_NODE];
-void dfs(int start,int level);
+
 int main()  {
-    int N,M,K,n1,nt,cnt=0;
-    int cle;
-    cin>>N>>M;
-    cle=N-M;
-    for (int i=0;i<M;i++)   {
-        cin>>n1>>K;
-        for (int j=0;j<K;j++)   {
-            cin>>nt;
-            tree[n1].push_back(nt);
-        }
-    }
-    dfs(1,0);
-    cnt=save[0];
-    cout<<save[0];
-    for (int i=1;cnt<cle;i++)    {
-        cnt+=save[i];
-        cout<<' '<<save[i];
-    }
-    cout<<endl;
+    string s;
     return 0;
 }
 
-void dfs(int start,int level)  {
-    if (tree[start].empty())    {
-        if (save[level]==INF)   save[level]=1;
-        else save[level]++;
-        return;
+void splitString(string& a,vector<string>& b,string c)  {
+    int pos1,pos2;
+    pos1=0;
+    pos2=a.find(c);
+    while (string::npos!=pos2)  {
+        b.push_back(a.substr(pos1,pos2-pos1));
+        pos1=pos2+c.size();
+        pos2=a.find(c,pos1);
     }
-    vector<int>::iterator ite=tree[start].begin();
-    for (;ite!=tree[start].end();ite++) {
-        dfs(*ite,level+1);
-    }
+    if (pos1!=a.length())   b.push_back(a.substr(pos1));
 }
