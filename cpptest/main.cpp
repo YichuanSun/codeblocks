@@ -1,23 +1,34 @@
 #include <bits/stdc++.h>
 using namespace std;
-struct st{
-    char c;
-    int nex;
-};
-map<int,st> mmp;
-bool jud(map<int,st> a[i]) {
-    if (a[i].nex==-1)   return true;
-    else return false;
+struct moon {
+    double store;
+    double inte;
+}moons[1005];
+bool cmp(moon a,moon b) {
+    if (a.inte==b.inte) return a.store>b.store;
+    else    return a.inte>b.inte;
 }
 int main()  {
-    st nst;
-    int be1,be2,n,f;
-    cin>>be1>>be2>>n;
+    int n,m;
+    double te,ans=0;
+    cin>>n>>m;
+    for (int i=0;i<n;i++)   cin>>moons[i].store;
     for (int i=0;i<n;i++)   {
-        cin>>f;
-        cin>>nst.c>>nst.nex;
-        mmp[f]=nst;
+        cin>>te;
+        moons[i].inte=1.0*te/moons[i].store;
     }
-    std::map<int,st>::iterator it1=find_if(mmp.begin(),mmp.end(),jud);
+    sort(moons,moons+n,cmp);
+    for (int i=0;i<n;i++)   {
+        if (m>moons[i].store) {
+            m-=moons[i].store;
+            ans+=moons[i].inte*moons[i].store;
+        }
+        else    {
+            ans+=1.0*m*moons[i].inte;
+            m=0;
+        }
+        if (m==0)   break;
+    }
+    printf("%.2lf\n",ans);
     return 0;
 }
