@@ -1,34 +1,91 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <cstring>
+#include <vector>
+#include <cstdlib>
+#include <cstdio>
 using namespace std;
-struct moon {
-    double store;
-    double inte;
-}moons[1005];
-bool cmp(moon a,moon b) {
-    if (a.inte==b.inte) return a.store>b.store;
-    else    return a.inte>b.inte;
+
+struct node{
+	int val;
+	node *left;
+	node *right;
+};
+
+vector<int>a;
+bool isBST=true;
+
+bool gt(const int &a,const int &b){
+	return a>=b;
 }
-int main()  {
-    int n,m;
-    double te,ans=0;
-    cin>>n>>m;
-    for (int i=0;i<n;i++)   cin>>moons[i].store;
-    for (int i=0;i<n;i++)   {
-        cin>>te;
-        moons[i].inte=1.0*te/moons[i].store;
-    }
-    sort(moons,moons+n,cmp);
-    for (int i=0;i<n;i++)   {
-        if (m>moons[i].store) {
-            m-=moons[i].store;
-            ans+=moons[i].inte*moons[i].store;
-        }
-        else    {
-            ans+=1.0*m*moons[i].inte;
-            m=0;
-        }
-        if (m==0)   break;
-    }
-    printf("%.2lf\n",ans);
-    return 0;
+
+bool lt(const int &a,const int &b){
+	return a<b;
+}
+
+node* build(int l,int r,bool cmp(const int&,const int&)){
+	if(!isBST) return NULL;
+	if(l>r) return NULL;
+	node *root=new node();
+	root->val=a[l];
+	if(l==r) return root;
+	int mid;
+	for(mid=l+1;mid<=r;mid++){
+		if(!cmp(a[mid],a[l])) {
+			break;
+		}
+	}
+	root->left=build(l+1,mid-1,cmp);
+	int j;
+	for(j=mid;j<=r;j++){
+		if(cmp(a[j],a[l])){
+			isBST=false;
+			return NULL;
+		}
+	}
+	root->right=build(mid,r,cmp);
+	return root;
+}
+
+bool flg=true;
+void postorder(node *root){
+	if(root){
+		postorder(root->left);
+		postorder(root->right);
+		if(flg){
+			cout<<root->val;
+			flg=false;
+		}
+		else{
+			cout<<" "<<root->val;
+		}
+	}
+}
+
+int main()
+{
+	int n;
+	cin>>n;
+	a.resize(n);
+	for(int i=0;i<n;i++){
+		cin>>a[i];
+	}
+	if(n==1){
+		cout<<"YES"<<endl;
+		cout<<a[0]<<endl;
+		return 0;
+	}
+	node *root=build(0,n-1,lt);
+	if(isBST){
+		cout<<"YES"<<endl;
+		postorder(root);
+	}
+	else{
+		isBST=true;
+		root=build(0,n-1,gt);
+		if(isBST){
+			cout<<"YES"<<endl;
+			postorder(root);
+		}
+		else cout<<"NO"<<endl;
+	}
 }
