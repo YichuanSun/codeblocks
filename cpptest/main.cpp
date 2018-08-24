@@ -1,34 +1,63 @@
 #include <iostream>
+#include <vector>
+#include <stdio.h>
+#include <algorithm>
+#include <string.h>
+
 using namespace std;
 
-int sr[] = {3500, 3500+1500, 3500+4500, 3500+9000, 3500+35000, 3500+55000, 3500+80000 };
-int tr[] = {3, 10, 20, 25, 30, 35, 45};
-const int SIZE = sizeof(sr) / sizeof(int);
+struct Person{
+    char *name;
+    int age;
+    int worth;
 
-int range[SIZE];
+    bool operator < (const Person p) const{
+        if(worth > p.worth) return true;
+        else if(worth < p.worth) return false;
+        else{ // 财富相等，比较年龄，年龄小的优先
+            if(age < p.age) return true;
+            else if(age > p.age) return false;
+            else{ // 年龄相等，比较名字，按照字典顺序
+                for(int i = 0; i < 9; i++){
+                    if(name[i] < p.name[i]) return true;
+                    else if(name[i] > p.name[i]) return false;
+                }
+                return true;
+            }
+        }
+
+    }
+
+};
 
 int main()
 {
-    int t,s;
-    cin >> t;
-    if (t<=3500)    {
-        cout<<t<<endl;
-        return 0;
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    vector<Person> persons;
+    int N,K;
+    cin >> N >> K;
+    persons.resize(N);
+    for(int i = 0; i < N; i++){
+        char *name = new char[9];
+        cin>>name>>persons[i].age>>persons[i].worth;
+        persons[i].name = name;
     }
-    range[0] = sr[0];
-    for(int i=1; i<SIZE; i++) {
-        range[i] = range[i-1] + (sr[i] - sr[i-1])
-                - (sr[i] - sr[i-1]) * tr[i-1] / 100;
+    sort(persons.begin(),persons.end());
+    int maxCnt,age_begin,age_end;
+    int outputCnt = 0;
+    for(int i = 0; i < K; i++){
+        cin>>maxCnt>>age_begin>>age_end;
+        outputCnt = 0;
+        cout<<"Case #"<<i+1<<":\n";
+        for(int i = 0; i < N; i++){
+            if(persons[i].age >= age_begin && persons[i].age <= age_end){
+                cout<<persons[i].name<<' '<<persons[i].age<<' '<<persons[i].worth<<endl;
+                outputCnt++;
+                if(outputCnt >= maxCnt) break;
+            }
+        }
+        if(outputCnt == 0) cout<<"None\n";
     }
-    int i;
-    for(i=0; i<SIZE; i++)
-        if(t <= range[i])
-            break;
-    if(i == 0)
-        s = t;
-    else {
-        s = sr[i-1] + (t - range[i-1]) * 100 / (100 - tr[i-1]);
-    }
-    cout << s << endl;
     return 0;
 }
