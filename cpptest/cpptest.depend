@@ -1,8 +1,7 @@
 # depslib dependency file v1.0
-1535086399 source:d:\code resourse\codeblocks\cpptest\main.cpp
+1535263735 source:d:\code resourse\codeblocks\cpptest\main.cpp
 	<iostream>
-	<vector>
-	<stdio.h>
+	<cstdio>
+	<queue>
 	<algorithm>
-	<string.h>
 

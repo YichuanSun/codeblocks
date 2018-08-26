@@ -1,63 +1,90 @@
-#include <iostream>
-#include <vector>
-#include <stdio.h>
-#include <algorithm>
-#include <string.h>
-
+#include<iostream>
+#include<cstdio>
+#include<queue>
+#include<algorithm>
 using namespace std;
-
-struct Person{
-    char *name;
-    int age;
-    int worth;
-
-    bool operator < (const Person p) const{
-        if(worth > p.worth) return true;
-        else if(worth < p.worth) return false;
-        else{ // 财富相等，比较年龄，年龄小的优先
-            if(age < p.age) return true;
-            else if(age > p.age) return false;
-            else{ // 年龄相等，比较名字，按照字典顺序
-                for(int i = 0; i < 9; i++){
-                    if(name[i] < p.name[i]) return true;
-                    else if(name[i] > p.name[i]) return false;
-                }
-                return true;
+struct node {
+    int v, height;
+    node *lchild, *rchild;
+}*root;
+node* newnode(int v) {
+    node* Node = new node;
+    Node->v = v;
+    Node->height = 1;
+    Node->lchild = Node->rchild = NULL;
+    return Node;
+}
+int getHeight(node* root) {
+    if(root == NULL) {
+        return 0;
+    }
+    return root->height;
+}
+void updatahegiht(node* root) {
+    root->height = max(getHeight(root->lchild), getHeight(root->rchild)) + 1;
+}
+int getbalancefac(node* root) {
+    return getHeight(root->lchild) - getHeight(root->rchild);
+}
+void L(node* &root) {
+    node* temp = root->rchild;
+    root->rchild = temp->lchild;
+    temp->lchild = root;
+    updatahegiht(root);
+    updatahegiht(temp);
+    root = temp;
+}
+void R(node* &root) {
+    node* temp = root->lchild;
+    root->lchild = temp->rchild;
+    temp->rchild = root;
+    updatahegiht(root);
+    updatahegiht(temp);
+    root = temp;
+}
+void insert(node* &root, int v) {
+    if(root == NULL) {
+        root = newnode(v);
+        return ;
+    }
+    if(v < root->v) {
+        insert(root->lchild, v);
+        updatahegiht(root);
+        if(getbalancefac(root) == 2) {
+            if(getbalancefac(root->lchild) == 1) {
+                R(root);
+            } else if(getbalancefac(root->lchild) == -1) {
+                L(root->lchild);
+                R(root);
             }
         }
-
-    }
-
-};
-
-int main()
-{
-    ios::sync_with_stdio(false);
-    cin.tie(0);
-    vector<Person> persons;
-    int N,K;
-    cin >> N >> K;
-    persons.resize(N);
-    for(int i = 0; i < N; i++){
-        char *name = new char[9];
-        cin>>name>>persons[i].age>>persons[i].worth;
-        persons[i].name = name;
-    }
-    sort(persons.begin(),persons.end());
-    int maxCnt,age_begin,age_end;
-    int outputCnt = 0;
-    for(int i = 0; i < K; i++){
-        cin>>maxCnt>>age_begin>>age_end;
-        outputCnt = 0;
-        cout<<"Case #"<<i+1<<":\n";
-        for(int i = 0; i < N; i++){
-            if(persons[i].age >= age_begin && persons[i].age <= age_end){
-                cout<<persons[i].name<<' '<<persons[i].age<<' '<<persons[i].worth<<endl;
-                outputCnt++;
-                if(outputCnt >= maxCnt) break;
+    } else {
+        insert(root->rchild, v);
+        updatahegiht(root);
+        if(getbalancefac(root) == -2) {
+            if(getbalancefac(root->rchild) == -1) {
+                L(root);
+            } else if(getbalancefac(root->rchild) == 1) {
+                R(root->rchild);
+                L(root);
             }
         }
-        if(outputCnt == 0) cout<<"None\n";
     }
+}
+node* create(int data[], int n) {
+    node* root = NULL;
+    for(int i = 0; i < n; i++) {
+        insert(root, data[i]);
+    }
+    return root;
+}
+int main() {
+    int n, v;
+    scanf("%d", &n);
+    for(int i = 0; i < n; i++) {
+        scanf("%d", &v);
+        insert(root, v);
+    }
+    printf("%d\n", root->v);
     return 0;
 }
