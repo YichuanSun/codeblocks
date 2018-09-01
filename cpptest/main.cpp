@@ -1,58 +1,48 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <stdio.h>
 using namespace std;
-struct node{
-    int data;
-    node *r,*l;
-};
-stack<int> st;
-vector<int> v;
-int ino[50],pre[50];
-node* buildTree(int pre[],int ino[],int n);
-void postOrderTraversal(node* root);
-int main()  {
-    int n,t,cnt=0,ci=0;
-    string s;
-    cin>>n;
-    while (cnt<n||!st.empty()) {
-        cin>>s;
-        if (s[1]=='u')  {
-            cin>>t;
-            st.push(t);
-            pre[cnt++]=t;
-        }
-        else if (s[1]=='o') {
-            ino[ci++]=st.top();
-            st.pop();
-        }
-    }
-    for (int i=0;i<n;i++)   cout<<pre[i]<<' ';
-    cout<<endl;
-    for (int i=0;i<n;i++)   cout<<ino[i]<<' ';
-    cout<<endl;
-    node* root=nullptr;
-    root=buildTree(pre,ino,n);
-    postOrderTraversal(root);
-    cout<<v[0];
-    for (int i=1;i<v.size();i++)    cout<<' '<<v[i];
-    cout<<endl;
-    return 0;
-}
 
-node* buildTree(int pre[],int ino[],int n)  {
-    if (n<=0)   return nullptr;
-    int s=0;
-    while (ino[s]!=pre[0])  s++;
-    node* newnode=new node;
-    newnode->data=ino[s];
-    newnode->l=buildTree(pre+1,ino,s);
-    newnode->r=buildTree(pre+s+1,ino+s+1,n-s-1);
-    return newnode;
+int main()
+{
+	int n,p;
+	scanf("%d%d",&n,&p);
+	vector<long> seq(n);
+	for(int i = 0; i < n; i++)
+		scanf("%ld",&seq[i]);
+	sort(seq.begin(),seq.end());
+	int maxcount = 0, down = 1;
+	for(int i = 0; i < n; i++)
+	{
+		long mp = p * seq[i];
+		if(mp >= seq[n-1]) // 如果最大的元素都≤m*p，则从当前位置到最后全部计数。
+		{
+			if(maxcount < n - i){
+                maxcount = n - i;
+			}
+			break;
+		}
+		int up = n-1;
+		while(up > down)
+		{
+		    // 二分查找，结束条件为上界≤下界，根据mid处的乘积判定。
+		    // 现在是确定了m，要找M，如果找到的位置＜mp，说明M可能可以更大，向右找；如果＞mp，说明M偏大，向左找。
+		    // 如果当前位置恰好满足，则说明已经找到了最长满足要求的位置。
+			int mid = (up + down)/2;
+			if(seq[mid] > mp)
+				up = mid;
+			else if(seq[mid] < mp)
+				down = mid + 1;
+			else
+			{
+				down = mid + 1;
+				break;
+			}
+		}
+		if(down - i > maxcount)
+			maxcount = down - i;
+	}
+	printf("%d\n",maxcount);
+	return 0;
 }
-
-void postOrderTraversal(node* root)  {
-    if (!root)  return;
-    postOrderTraversal(root->l);
-    postOrderTraversal(root->r);
-    v.push_back(root->data);
-}
-
