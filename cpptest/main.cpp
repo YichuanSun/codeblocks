@@ -1,18 +1,11 @@
 #include <bits/stdc++.h>
 using namespace std;
-set<int> ss;
+
 int main()  {
-    int n,t;
-    cin>>n;
-    for (int i=1;i<=n;i++)   {
-        cin>>t;
-        cout<<"find:\t"<<*(ss.find(t))<<endl;
-        cout<<"end:\t"<<*(ss.end())<<endl;
-        if (ss.find(t)!=ss.end())   {
-            cout<<t<<' '<<"YES"<<endl;
-        }
-        else    cout<<"No"<<endl;
-        ss.insert(t);
-    }
+    int n;
+    int a[]={23,31,45,67,89,91,96};
+    int *b=upper_bound(a,a+7,89);
+    int *c=lower_bound(a,a+7,89);
+    cout<<b-c<<endl;
     return 0;
 }
