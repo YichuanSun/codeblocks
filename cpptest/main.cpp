@@ -1,23 +1,19 @@
 #include <bits/stdc++.h>
 using namespace std;
-int minlen(string a,string b);
-int main()  {
-    string a,b;
-    while (cin>>a&&!a.empty())  {
-        cin>>b;
-        cout<<min(minlen(a,b),minlen(b,a))<<endl;
-    }
-    return 0;
+struct Point{
+    int x,y;
+    Point(int a=0,int b=0){x=a,y=b;}
+};
+Point operator + (const Point& a,const Point& b)    {
+    return Point(a.x+b.x,a.y+b.y);
 }
-
-int minlen(string a,string b)  {
-    int alen=(int)a.size(),blen=(int)b.size();
-    int res=alen+blen,smallen=min(alen,blen);
-    for (int i=0;i<alen;i++)  {
-        int j,rg=min(smallen,alen-i);
-        for (j=0;j<rg;j++)
-            if (a[i+j]=='2'&&b[j]=='2')   break;
-        if (j==rg)  res=min(res,alen+blen-rg);
-    }
-    return res;
+ostream& operator <<  (ostream &out,const Point& p) {
+    out << '(' << p.x << ',' << p.y << ')';
+    return out;
+}
+int main()  {
+    Point a,b(1,2);
+    a.x=3;
+    cout<<a+b<<endl;
+    return 0;
 }
