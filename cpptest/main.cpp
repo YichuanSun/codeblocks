@@ -1,19 +1,35 @@
 #include <bits/stdc++.h>
 using namespace std;
-struct Point{
-    int x,y;
-    Point(int a=0,int b=0){x=a,y=b;}
+struct node{
+    char c;
+    node* next;
 };
-Point operator + (const Point& a,const Point& b)    {
-    return Point(a.x+b.x,a.y+b.y);
-}
-ostream& operator <<  (ostream &out,const Point& p) {
-    out << '(' << p.x << ',' << p.y << ')';
-    return out;
-}
+node *head,*tail,*now;
 int main()  {
-    Point a,b(1,2);
-    a.x=3;
-    cout<<a+b<<endl;
+    string s;
+    while (cin>>s)  {
+        head=new node;
+        head->next=nullptr;
+        tail=now=head;
+        for (int i=0;i<(int)s.size();i++)   {
+            char ch=s[i];
+            if (ch=='[')  now=head;
+            else if (ch==']') now=tail;
+            else {
+                node* tn=new node;
+                tn->c=ch;
+                tn->next=now->next;
+                now->next=tn;
+                now=tn;
+                if (now->next==nullptr) tail=now;   //就缺了这一句没想出来啊
+            }
+        }
+        node* ite=head->next;
+        while (ite!=nullptr) {
+            cout<<ite->c;
+            ite=ite->next;
+        }
+        cout<<endl;
+    }
     return 0;
 }
