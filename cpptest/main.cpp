@@ -1,34 +1,56 @@
-#include<bits/stdc++.h>
-using namespace std;
-int x[10],y[10],a[7][2];
-bool vis[10],f=0;
-void dfs(int pos){
-	if(f==1)	return;
-	if(pos==7){
-		if(a[1][0]==a[2][1]&&a[2][1]==a[5][0])
-		if(a[1][1]==a[3][0]&&a[3][0]==a[5][1])
-		if(a[2][0]==a[4][1])
-		if(a[3][1]==a[6][0])	f=1;
-		return;
-	}
-	for(int i=1;i<=6;i++){
-		if(vis[i])	continue;
-		vis[i]=1;
-		a[pos][0]=x[i],a[pos][1]=y[i];
-		dfs(pos+1);
-		a[pos][0]=y[i],a[pos][1]=x[i];
-		dfs(pos+1);
-		vis[i]=0;
-	}
+//�?/ UVa129 Krypton Factor
+// Rujia Liu
+#include<stdio.h>
+int n, L, cnt;
+int S[100];
+
+int dfs(int cur)                                         // 返回0表示已经得到解，无须继续搜索
+{
+    if(cnt++ == n)
+    {
+        for(int i = 0; i < cur; i++)
+        {
+            if(i % 64 == 0 && i > 0)
+                printf("\n");
+            else if(i % 4 == 0 && i > 0)
+                printf(" ");
+            printf("%c", 'A'+S[i]); // 输出方案
+        }
+        printf("\n%d\n", cur);
+        return 0;
+    }
+    for(int i = 0; i < L; i++)
+    {
+        S[cur] = i;
+        int ok = 1;
+        for(int j = 1; j*2 <= cur+1; j++)                    // 尝试长度为j*2的后缀
+        {
+            int equal = 1;
+            for(int k = 0; k < j; k++)                         // 检查后一半是否等于前一�?
+                if(S[cur-k] != S[cur-k-j])
+                {
+                    equal = 0;
+                    break;
+                }
+            if(equal)
+            {
+                ok = 0;    // 后一半等于前一半，方案不合�?
+                break;
+            }
+        }
+        if(ok)
+            if(!dfs(cur+1))
+                return 0;                     // 递归搜索。如果已经找到解，则直接退�?
+    }
+    return 1;
 }
-int main(){
-	int t;	cin>>t;
-	while(t--){
-		f=0;
-		for(int i=1;i<=6;i++)	vis[i]=0;
-		for(int i=1;i<=6;i++)	cin>>x[i]>>y[i];
-		dfs(1);
-		if(f)	puts("YES");
-		else puts("NO");
-	}
+
+int main()
+{
+    while(scanf("%d%d", &n, &L) == 2 && n > 0)
+    {
+        cnt = 0;
+        dfs(0);
+    }
+    return 0;
 }
