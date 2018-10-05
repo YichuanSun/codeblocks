@@ -42,7 +42,8 @@ int main()
 	{
 		for(int j=i; j<=n; j++)
 		{
-			int len = j-i+1; llong c = p/(sa[j]-sa[i-1]);
+			int len = j-i+1;
+			llong c = p/(sa[j]-sa[i-1]);
 			int mxb = upper_bound(mb+1,mb+m+1,c)-mb-1;
 			ans = max(ans,len*mxb);
 		}
