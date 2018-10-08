@@ -15,7 +15,11 @@ void Build(int l,int r,int rt)  {
     Build(m+1,r,rt<<1|1);
     PushUp(rt);
 }
-
-void update(int l,int r,int rt) {
-    if ()
+//修改A[L]+=C单个值，对线段树的修改
+void update(int L,int C,int l,int r,int rt) {
+    if (l==r)   {sTree[rt]+=C;return;}
+    int m=(l+r)>>1;
+    if (L<=m)   update(L,C,l,m,rt<<1);
+    else    update(L,C,m+1,r,rt<<1|1);
+    PushUp(rt);
 }
