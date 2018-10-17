@@ -1,37 +1,85 @@
-#include <bits/stdc++.h>
-#define MAX_V 1005
-#define INF 1000005
+#include <cstdio>
+#include <cmath>
+#include <algorithm>
 using namespace std;
-
-bool used[MAX_V];
-int mincost[MAX_V];
-int cost[MAX_V][MAX_V];
-int V;
-
-int main()  {
-    return 0;
+struct nodedian
+{
+	double x,y;
+}dian[800];//存点集
+struct node
+{
+	int s,e;
+	double p;
+}bian[320000];//存边集
+int pre[800];//存父节点
+bool cmp(struct node a,struct node b)
+{
+	return a.p<b.p;
 }
-
-int prim(int start) {
-    fill(mincost,mincost+V,INF);
-    fill(used,used+V,false);
-    mincost[start]=0;
-    int res=0;
-    while (true)    {
-        int v=-1;
-        for (int u=0;u<V;u++)   {
-            if (!used[u]||(v==-1||mincost[u]<mincost[v]))   v=u;
-        }
-        if (v==-1)  break;
-        used[v]=true;
-        res+=mincost[v];
-        for (int u=0;u<V;u++)
-            mincost[u]=min(mincost[u],cost[v][u]);
-    }
+int find(int x)
+{
+	int r=x;
+	while(r!=pre[r])
+	{
+		r=pre[r];
+	}
+	int i=x,j;
+	while(i!=r)
+	{
+		j=pre[i];
+		pre[i]=r;
+		i=j;
+	}
+	return r;
 }
-
-
-
-
-
-
+int main()
+{
+	int n;
+	while(scanf("%d",&n)!=EOF)
+	{
+		for(int i=1;i<=n;i++)//输入点集
+		{
+			scanf("%lf%lf",&dian[i].x,&dian[i].y);
+		}
+		int num=0;
+		for(int i=1;i<=n-1;i++)//将点集两两组合成边集
+		{
+			for(int j=i+1;j<=n;j++)
+			{
+				bian[num].s=i;
+				bian[num].e=j;
+				bian[num].p=sqrt((dian[i].x-dian[j].x)*(dian[i].x-dian[j].x)+(dian[i].y-dian[j].y)*(dian[i].y-dian[j].y));
+				num++;
+			}
+		}
+		sort(bian,bian+num,cmp);//边集排序
+		int m;
+		scanf("%d",&m);
+		for(int i=1;i<=n;i++)//初始化父节点
+		{
+			pre[i]=i;
+		}
+		int x,y;
+		for(int i=0;i<m;i++)//合并已连接的边
+		{
+			scanf("%d%d",&x,&y);
+			int fx=find(x);
+			int fy=find(y);
+			if(fx!=fy)
+			{
+				pre[fx]=fy;
+			}
+		}
+		for(int i=0;i<num;i++)//连接新边，使其联通
+		{
+			int fx=find(bian[i].s);
+			int fy=find(bian[i].e);
+			if(fx!=fy)
+			{
+				pre[fx]=fy;
+				printf("%d %d\n",bian[i].s,bian[i].e);
+			}
+		}
+	}
+	return 0;
+}
