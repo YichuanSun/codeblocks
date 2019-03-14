@@ -1,6 +1,4 @@
 # depslib dependency file v1.0
-1539664171 source:d:\code resourse\codeblocks\cpptest\main.cpp
-	<cstdio>
-	<cmath>
-	<algorithm>
+1552395902 source:d:\code resourse\codeblocks\cpptest\main.cpp
+	<bits/stdc++.h>
 
