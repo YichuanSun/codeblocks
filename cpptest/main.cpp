@@ -1,14 +1,9 @@
 #include <bits/stdc++.h>
+#define N 15
 using namespace std;
 
-string ab(string ns,int r)  {
-    string ts=ns[r];
-    cout<<ts<<endl;
-}
-
 int main()  {
-    string s;
-    cin>>s;
-    ab(s,3);
+    int a[N]={0};
+    for (int i=0;i<N;i++)   printf("%d\n",a[i]);
     return 0;
 }
