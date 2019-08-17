@@ -1,5 +1,4 @@
 # depslib dependency file v1.0
-1564060781 source:d:\code resourse\codeblocks\cpptest\main.cpp
-	<iostream>
-	<vector>
+1566046481 source:d:\code resourse\codeblocks\cpptest\main.cpp
+	<bits/stdc++.h>
 
