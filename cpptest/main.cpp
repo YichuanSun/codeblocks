@@ -1,40 +1,33 @@
 #include <bits/stdc++.h>
 #define N 1005
 using namespace std;
-int re(int a[],int b[],int n)   {
-    int sz=0;
-    if (n==1)   {b[sz++]=a[0];b[sz++]=1;return sz;}
-    int c=a[0],cnt=1;
-    for (int i=1;i<n;i++)   {
-        if (a[i]==c)    cnt++;
-        else {
-            b[sz++]=c;
-            stack<int> sa;
-            while (cnt) {
-                sa.push(cnt%10);
-                cnt/=10;
-            }
-            while (!sa.empty()){b[sz++]=sa.top();sa.pop();}
-            cnt=1;
-            c=a[i];
-        }
+string stadd(string a,string b)  {
+    char c[N]="";
+    reverse(a.begin(),a.end());
+    reverse(b.begin(),b.end());
+    int i=0;
+    c[i]='0';
+    for (;i<a.size();i++)    {
+        c[i]+=(a[i]-'0'+b[i]-'0')%10;
+        c[i+1]=(a[i]-'0'+b[i]-'0')/10+'0';
     }
-    b[sz++]=c;
-    stack<int> sa;
-    while (cnt) {
-        sa.push(cnt%10);
-        cnt/=10;
-    }
-    while (!sa.empty()){b[sz++]=sa.top();sa.pop();}
-    return sz;
+    c[i+1]='\0';
+    reverse(c,c+i+1);
+    for (int j=0;j<i+1;j++)
+        printf("%c",c[j]);
+    printf("\n");
+    return c;
 }
-int a[N],b[N];
 int main()  {
-    int n;
-    cin>>n;
-    for (int i=0;i<n;i++)   cin>>a[i];
-    int sz=re(a,b,n);
-    for (int i=0;i<sz;i++)  cout<<b[i];
-    cout<<endl;
+    string s,t;
+    int cnt=0;
+    cin>>s;
+    t=s;
+    reverse(t.begin(),t.end());
+    string nw=stadd(s,t);
     return 0;
 }
+
+
+
+
