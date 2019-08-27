@@ -1,33 +1,53 @@
 #include <bits/stdc++.h>
 #define N 1005
 using namespace std;
-string stadd(string a,string b)  {
-    char c[N]="";
-    reverse(a.begin(),a.end());
-    reverse(b.begin(),b.end());
+
+struct bt{
+    int data;
+    bt *lc=nullptr,*rc=nullptr;
+};
+stack<bt*> bs;
+int n,in[N],post[N];
+bt* postInBuildTree(int post[],int in[],int n)    {
+    if (n<=0)   return nullptr;
     int i=0;
-    c[i]='0';
-    for (;i<a.size();i++)    {
-        c[i]+=(a[i]-'0'+b[i]-'0')%10;
-        c[i+1]=(a[i]-'0'+b[i]-'0')/10+'0';
-    }
-    c[i+1]='\0';
-    reverse(c,c+i+1);
-    for (int j=0;j<i+1;j++)
-        printf("%c",c[j]);
-    printf("\n");
-    return c;
+    while (i<n&&post[n-1]!=in[i])   i++;
+    bt* nw=new bt;
+    nw->data=post[n-1];
+    nw->lc=postInBuildTree(post,in,i);
+    nw->rc=postInBuildTree(post+i,in+i+1,n-i-1);
+    return nw;
 }
+void pret(bt* root);
 int main()  {
-    string s,t;
-    int cnt=0;
-    cin>>s;
-    t=s;
-    reverse(t.begin(),t.end());
-    string nw=stadd(s,t);
+    int n;
+    cin>>n;
+    for (int i=0;i<n;i++)   cin>>in[i];
+    for (int i=0;i<n;i++)   cin>>post[i];
+    bt* root=postInBuildTree(post,in,n);
+    pret(root);
     return 0;
 }
-
-
-
+void pret(bt* root) {
+    bt *p=root,*r=nullptr;
+    while (p||!bs.empty())  {
+        if (p)  {
+            bs.push(p);
+            p=p->lc;
+        }
+        else {
+            p=bs.top();
+            if (p->rc&&p->rc!=r)    {
+                p=p->rc;
+                bs.push(p);
+                p=p->lc;
+            }
+            else {
+                p=bs.top();bs.pop();
+                printf("%d ",p->data);
+                r=p;p=nullptr;
+            }
+        }
+    }
+}
 
